@@ -2,10 +2,14 @@ package observatory
 
 import java.time.LocalDate
 
+import scala.io.{BufferedSource, Source}
+
 /**
   * 1st milestone: data extraction
   */
 object Extraction extends ExtractionInterface {
+
+  type Fahrenheit = Double
 
   /**
     * @param year             Year number
@@ -16,6 +20,10 @@ object Extraction extends ExtractionInterface {
   def locateTemperatures(year: Year, stationsFile: String, temperaturesFile: String): Iterable[(LocalDate, Location, Temperature)] = {
     ???
   }
+
+  def loadSourceFromFile(filePath: String): BufferedSource = Source.fromInputStream(getClass.getResourceAsStream(s"/$filePath"), "utf-8")
+
+  def fahrenheit2Celsius(degreesInF: Fahrenheit): Temperature = (degreesInF - 30.0) * (5/9.0)
 
   /**
     * @param records A sequence containing triplets (date, location, temperature)
