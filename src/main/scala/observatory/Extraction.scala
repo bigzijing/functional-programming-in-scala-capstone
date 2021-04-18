@@ -21,10 +21,10 @@ object Extraction extends ExtractionInterface {
     val stationsFileIterable: Iterator[String] = loadSourceFromFile(stationsFile)
 
     val temperatureByStation: Iterator[(Station, LocalDate, Temperature)] = temperatureFileIterable.map(_.split(",")).collect {
-      case tokens @Array(stn, wban, m, d, f) if tokens.size == 5 => (Station(stn, wban), LocalDate.of(year, m.toInt, d.toInt), fahrenheit2Celsius(f.toDouble))
+      case Array(stn, wban, m, d, f) => (Station(stn, wban), LocalDate.of(year, m.toInt, d.toInt), fahrenheit2Celsius(f.toDouble))
     }
     val stationsToLocationMap: Map[Station, Location] = stationsFileIterable.map(_.split(",")).collect {
-      case tokens @Array(stn, wban, lat, long) if lat != "" && long != "" && tokens.size == 4 => (Station(stn, wban), Location(lat.toDouble, long.toDouble))
+      case Array(stn, wban, lat, long) if validGPS(lat, long) => (Station(stn, wban), Location(lat.toDouble, long.toDouble))
     }.toMap
 
     temperatureByStation.collect {
@@ -32,7 +32,7 @@ object Extraction extends ExtractionInterface {
     }.toIterable
   }
 
-  def checkArray(tokens: Array[String]): Boolean = !tokens.contains("")
+  def validGPS(lat: String, long: String): Boolean = !List(lat, long).contains("")
 
   def loadSourceFromFile(fileName: String): Iterator[String] = Source.fromInputStream(getClass.getResourceAsStream(fileName)).getLines()
 
