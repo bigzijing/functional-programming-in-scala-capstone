@@ -36,7 +36,7 @@ object Extraction extends ExtractionInterface {
 
   def loadSourceFromFile(fileName: String): Iterator[String] = Source.fromInputStream(getClass.getResourceAsStream(fileName)).getLines()
 
-  def fahrenheit2Celsius(degreesInF: Fahrenheit): Temperature = (degreesInF - 30.0) * (5.0/9.0)
+  def fahrenheit2Celsius(degreesInF: Fahrenheit): Temperature = (degreesInF.toDouble - 32.0) * (5.0/9.0)
 
   /**
     * @param records A sequence containing triplets (date, location, temperature)
