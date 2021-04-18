@@ -1,7 +1,7 @@
 package observatory
 
 import java.time.LocalDate
-import scala.io.{BufferedSource, Source}
+import scala.io.Source
 
 /**
   * 1st milestone: data extraction
