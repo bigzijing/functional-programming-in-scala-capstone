@@ -1,6 +1,7 @@
 package observatory
 
 import com.sksamuel.scrimage.{Image, Pixel}
+import math.{abs}
 
 /**
   * 2nd milestone: basic visualization
@@ -27,7 +28,8 @@ object Visualization extends VisualizationInterface {
     }
   }
 
-  def areAntipodes(loc1: Location, loc2: Location): Boolean = {}
+  def areAntipodes(loc1: Location, loc2: Location): Boolean =
+    (loc1.lat == -loc2.lat) && (abs(loc1.lon - loc2.lon) == 180)
 
   /**
     * @param points Pairs containing a value and its associated color
