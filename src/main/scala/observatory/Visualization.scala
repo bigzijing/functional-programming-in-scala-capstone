@@ -1,7 +1,9 @@
 package observatory
 
 import com.sksamuel.scrimage.{Image, Pixel}
-import math.{abs, toRadians, acos, sin, cos, pow}
+
+import math.{abs, acos, cos, pow, sin, toRadians}
+import scala.annotation.tailrec
 
 /**
   * 2nd milestone: basic visualization
@@ -59,7 +61,18 @@ object Visualization extends VisualizationInterface {
     */
   def interpolateColor(points: Iterable[(Temperature, Color)],
                        value: Temperature): Color = {
-    ???
+    val colorsSorted = points.toList.sortBy(_._1)
+
+    @tailrec
+    def interpolateRecursively(points: List[(Temperature, Color)], value: Temperature): Color = {
+      ???
+    }
+
+    if (colorsSorted.head._1 > value) colorsSorted.head._2
+    else if (colorsSorted.last._1 < value) colorsSorted.last._2
+    else {
+      interpolateRecursively(colorsSorted, value)
+    }
   }
 
   /**
