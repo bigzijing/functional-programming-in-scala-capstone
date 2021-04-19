@@ -1,12 +1,14 @@
 package observatory
 
 import com.sksamuel.scrimage.{Image, Pixel}
-import math.{abs}
+import math.{abs, toRadians, acos, sin, cos}
 
 /**
   * 2nd milestone: basic visualization
   */
 object Visualization extends VisualizationInterface {
+  val idwPower = 2
+  val earthRadiusKM = 6371
 
   /**
     * @param temperatures Known temperatures: pairs containing a location and the temperature at this location
@@ -17,14 +19,21 @@ object Visualization extends VisualizationInterface {
                          location: Location): Temperature = {
     val distances =
       temperatures.map(row => (calcDistance(row._1, location), row._2))
+    ???
   }
 
   def calcDistance(loc1: Location, loc2: Location): Double = {
     if (loc1 == loc2) 0
     else if (areAntipodes(loc1, loc2)) {
-      ???
+      earthRadiusKM * math.Pi
     } else {
-      ???
+      val loc1InRads =
+        Location(lat = toRadians(loc1.lat), lon = toRadians(loc1.lon))
+      val loc2InRads =
+        Location(lat = toRadians(loc2.lat), lon = toRadians(loc2.lon))
+      val chgInLonRadians = abs(loc1InRads.lon - loc2InRads.lon)
+
+      acos(sin(loc1InRads.lat) * sin(loc2InRads.lat) + cos(loc1InRads.lat) * cos(loc2InRads.lat) * cos(chgInLonRadians))
     }
   }
 
