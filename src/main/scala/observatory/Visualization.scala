@@ -2,7 +2,7 @@ package observatory
 
 import com.sksamuel.scrimage.{Image, Pixel}
 
-import math.{abs, acos, cos, pow, sin, toRadians}
+import math.{abs, acos, cos, pow, sin, toRadians, round}
 import scala.annotation.tailrec
 
 /**
@@ -64,8 +64,15 @@ object Visualization extends VisualizationInterface {
     val colorsSorted = points.toList.sortBy(_._1)
 
     @tailrec
-    def interpolateRecursively(points: List[(Temperature, Color)], value: Temperature): Color = {
-      ???
+    def interpolateRecursively(points: List[(Temperature, Color)], value: Temperature): Color = points match {
+      case left :: right :: _ if (left._1 < value && right._1 > value) =>
+        val interpolatedR = round((left._2.red + left._2.red) / 2.0).toInt
+        val interpolatedG = round((left._2.green + left._2.green) / 2.0).toInt
+        val interpolatedB = round((left._2.blue + left._2.blue) / 2.0).toInt
+
+        Color(interpolatedR, interpolatedG, interpolatedB)
+      case _ :: right :: tail => interpolateRecursively(right :: tail, value)
+      case head :: Nil => head._2
     }
 
     if (colorsSorted.head._1 > value) colorsSorted.head._2
