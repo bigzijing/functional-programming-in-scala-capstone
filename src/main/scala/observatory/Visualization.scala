@@ -12,6 +12,9 @@ object Visualization extends VisualizationInterface {
   val idwPower = 2
   val earthRadiusKM = 6371
 
+  val imageWidth = 360
+  val imageHeight = 180
+
   /**
     * @param temperatures Known temperatures: pairs containing a location and the temperature at this location
     * @param location Location where to predict the temperature
@@ -89,7 +92,19 @@ object Visualization extends VisualizationInterface {
     */
   def visualize(temperatures: Iterable[(Location, Temperature)],
                 colors: Iterable[(Temperature, Color)]): Image = {
-    ???
+    def convertArrayIndexToLocation(index: Int): Location = {
+      val xPoint: Int = index % imageWidth
+      val yPoint: Int = index / imageHeight
+
+      Location(90 - yPoint, xPoint - 180)
+    }
+
+    val pixels = (0 until imageHeight * imageWidth).map { index =>
+      val rgb = interpolateColor(colors, predictTemperature(temperatures, convertArrayIndexToLocation(index)))
+      Pixel(rgb.red, rgb.green, rgb.blue, 255)
+    }.toArray
+
+    Image(imageWidth, imageHeight, pixels)
   }
 
 }
