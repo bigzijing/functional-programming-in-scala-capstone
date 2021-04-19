@@ -1,7 +1,7 @@
 package observatory
 
 import com.sksamuel.scrimage.{Image, Pixel}
-import math.{abs, toRadians, acos, sin, cos}
+import math.{abs, toRadians, acos, sin, cos, pow}
 
 /**
   * 2nd milestone: basic visualization
@@ -17,9 +17,13 @@ object Visualization extends VisualizationInterface {
     */
   def predictTemperature(temperatures: Iterable[(Location, Temperature)],
                          location: Location): Temperature = {
-    val distances =
-      temperatures.map(row => (calcDistance(row._1, location), row._2))
-    ???
+    val distances = temperatures.map(row => (calcDistance(row._1, location), row._2))
+    val distancesMinByDistance = distances.minBy(_._1)
+
+    if (distancesMinByDistance._1 < 1) distancesMinByDistance._2
+    else {
+      ???
+    }
   }
 
   def calcDistance(loc1: Location, loc2: Location): Double = {
@@ -39,6 +43,16 @@ object Visualization extends VisualizationInterface {
 
   def areAntipodes(loc1: Location, loc2: Location): Boolean =
     (loc1.lat == -loc2.lat) && (abs(loc1.lon - loc2.lon) == 180)
+
+  def calcIDW(temperaturesByDistance: Iterable[(Double, Temperature)]): Double = {
+    val (weightedSum, inverseWeightedSum) = temperaturesByDistance
+      .foldLeft(0.0, 0.0) {
+        case ((weightAcc, inverseWeightAcc), (dist, temp)) =>
+          val weight = 1 / pow(dist, idwPower)
+          (weight * temp + weightAcc, weight + inverseWeightAcc)
+      }
+    weightedSum / inverseWeightedSum
+  }
 
   /**
     * @param points Pairs containing a value and its associated color
