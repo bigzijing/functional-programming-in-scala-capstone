@@ -21,9 +21,7 @@ object Visualization extends VisualizationInterface {
     val distancesMinByDistance = distances.minBy(_._1)
 
     if (distancesMinByDistance._1 < 1) distancesMinByDistance._2
-    else {
-      ???
-    }
+    else calcIDW(distances)
   }
 
   def calcDistance(loc1: Location, loc2: Location): Double = {
