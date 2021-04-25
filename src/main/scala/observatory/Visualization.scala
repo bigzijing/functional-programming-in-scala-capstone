@@ -34,13 +34,11 @@ object Visualization extends VisualizationInterface {
     else if (areAntipodes(loc1, loc2)) {
       earthRadiusKM * math.Pi
     } else {
-      val loc1InRads =
-        Location(lat = toRadians(loc1.lat), lon = toRadians(loc1.lon))
-      val loc2InRads =
-        Location(lat = toRadians(loc2.lat), lon = toRadians(loc2.lon))
+      val loc1InRads = Location(lat = toRadians(loc1.lat), lon = toRadians(loc1.lon))
+      val loc2InRads = Location(lat = toRadians(loc2.lat), lon = toRadians(loc2.lon))
       val chgInLonRadians = abs(loc1InRads.lon - loc2InRads.lon)
 
-      acos(sin(loc1InRads.lat) * sin(loc2InRads.lat) + cos(loc1InRads.lat) * cos(loc2InRads.lat) * cos(chgInLonRadians))
+      earthRadiusKM * acos(sin(loc1InRads.lat) * sin(loc2InRads.lat) + cos(loc1InRads.lat) * cos(loc2InRads.lat) * cos(chgInLonRadians))
     }
   }
 
