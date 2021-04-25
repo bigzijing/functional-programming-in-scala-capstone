@@ -2,8 +2,7 @@ package observatory
 
 import com.sksamuel.scrimage.{Image, Pixel}
 
-import math.{abs, acos, cos, pow, sin, toRadians, round}
-import scala.annotation.tailrec
+import math.{abs, acos, cos, pow, sin, toRadians}
 
 /**
   * 2nd milestone: basic visualization
