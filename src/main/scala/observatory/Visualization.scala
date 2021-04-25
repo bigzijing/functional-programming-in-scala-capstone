@@ -47,7 +47,7 @@ object Visualization extends VisualizationInterface {
 
   def calcIDW(temperaturesByDistance: Iterable[(Double, Temperature)]): Double = {
     val (weightedSum, inverseWeightedSum) = temperaturesByDistance
-      .foldLeft(0.0, 0.0) {
+      .foldLeft((0.0, 0.0)) {
         case ((weightAcc, inverseWeightAcc), (dist, temp)) =>
           val weight = 1 / pow(dist, idwPower)
           (weight * temp + weightAcc, weight + inverseWeightAcc)
