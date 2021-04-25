@@ -100,15 +100,20 @@ object Visualization extends VisualizationInterface {
     */
   def visualize(temperatures: Iterable[(Location, Temperature)],
                 colors: Iterable[(Temperature, Color)]): Image = {
-    def convertArrayIndexToLocation(index: Int): Location = {
-      val xPoint: Int = index % imageWidth
-      val yPoint: Int = index / imageHeight
-
-      Location(90 - yPoint, xPoint - 180)
+    def convertIndexToLocation(index: (Int, Int)): Location = {
+      val (xCoord, yCoord) = index
+      val lat = -(xCoord - (imageHeight/2)) * (180/imageHeight)
+      val lon = (yCoord - imageWidth/2) * (360/imageWidth)
+      Location(lat, lon)
     }
 
-    val pixels = (0 until imageHeight * imageWidth).map { index =>
-      val rgb = interpolateColor(colors, predictTemperature(temperatures, convertArrayIndexToLocation(index)))
+    val coords = for {
+      i <- 0 until imageHeight
+      j <- 0 until imageWidth
+    } yield (i, j)
+
+    val pixels = coords.map { index =>
+      val rgb = interpolateColor(colors, predictTemperature(temperatures, convertIndexToLocation(index)))
       Pixel(rgb.red, rgb.green, rgb.blue, 255)
     }.toArray
 
