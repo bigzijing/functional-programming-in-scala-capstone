@@ -62,24 +62,34 @@ object Visualization extends VisualizationInterface {
     */
   def interpolateColor(points: Iterable[(Temperature, Color)],
                        value: Temperature): Color = {
-    val colorsSorted = points.toList.sortBy(_._1)
+    points.find(_._1 == value) match {
+      case Some(point) => point._2
+      case _ =>
+        val (lowerPoints, higherPoints) = points.partition(_._1 < value)
+        if (lowerPoints.isEmpty) higherPoints.minBy(_._1)._2
+        else if (higherPoints.isEmpty) lowerPoints.maxBy(_._1)._2
+        else {
+          val leftPoint = lowerPoints.maxBy(_._1)
+          val rightPoint = higherPoints.minBy(_._1)
 
-    @tailrec
-    def interpolateRecursively(points: List[(Temperature, Color)], value: Temperature): Color = points match {
-      case left :: right :: _ if (left._1 < value && right._1 > value) =>
-        val interpolatedR = round((left._2.red + left._2.red) / 2.0).toInt
-        val interpolatedG = round((left._2.green + left._2.green) / 2.0).toInt
-        val interpolatedB = round((left._2.blue + left._2.blue) / 2.0).toInt
+          def interpolationRatio(value: Double, left: Double, right: Double): Double = {
+            val range = right - left
+            val valueRange = value - left
+            valueRange / range
+          }
 
-        Color(interpolatedR, interpolatedG, interpolatedB)
-      case _ :: right :: tail => interpolateRecursively(right :: tail, value)
-      case head :: Nil => head._2
-    }
+          val ratio = interpolationRatio(value, leftPoint._1, rightPoint._1)
 
-    if (colorsSorted.head._1 > value) colorsSorted.head._2
-    else if (colorsSorted.last._1 < value) colorsSorted.last._2
-    else {
-      interpolateRecursively(colorsSorted, value)
+          def interpolateColor(leftColor: Int, rightColor: Int): Int = {
+            val leftRightDiff = rightColor - leftColor
+            leftColor + (ratio * leftRightDiff).round.toInt
+          }
+
+          Color(
+            interpolateColor(leftPoint._2.red, rightPoint._2.red),
+            interpolateColor(leftPoint._2.green, rightPoint._2.green),
+            interpolateColor(leftPoint._2.blue, rightPoint._2.blue))
+        }
     }
   }
 
