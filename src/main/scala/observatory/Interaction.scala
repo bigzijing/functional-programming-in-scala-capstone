@@ -1,5 +1,6 @@
 package observatory
 
+import Visualization._
 import com.sksamuel.scrimage.{Image, Pixel}
 import scala.math._
 
@@ -7,6 +8,9 @@ import scala.math._
   * 3rd milestone: interactive visualization
   */
 object Interaction extends InteractionInterface {
+
+  val tileHeight = 256
+  val tileWidth = 256
 
   /**
     * @param tile Tile coordinates
@@ -25,7 +29,26 @@ object Interaction extends InteractionInterface {
     * @return A 256×256 image showing the contents of the given tile
     */
   def tile(temperatures: Iterable[(Location, Temperature)], colors: Iterable[(Temperature, Color)], tile: Tile): Image = {
-    ???
+    val coords = for {
+      i <- 0 until tileHeight
+      j <- 0 until tileWidth
+    } yield (i, j)
+
+    val tilePixels = coords
+      .map {
+        case (x, y) =>
+          Tile(
+            tile.x * tileWidth + x,
+            tile.y * tileHeight + y,
+            8
+          ) }
+      .map(tileLocation)
+      .map(predictTemperature(temperatures, _))
+      .map(interpolateColor(colors, _))
+      .map(color => Pixel(color.red, color.green, color.blue, 127))
+      .toArray
+
+    Image(tileHeight, tileWidth, tilePixels)
   }
 
   /**
