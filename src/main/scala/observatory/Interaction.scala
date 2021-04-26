@@ -62,7 +62,12 @@ object Interaction extends InteractionInterface {
     yearlyData: Iterable[(Year, Data)],
     generateImage: (Year, Tile, Data) => Unit
   ): Unit = {
-    ???
+    for {
+      zoom <- 0 to 3
+      x <- 0 until pow(2, zoom).toInt
+      y <- 0 until pow(2, zoom).toInt
+      data <- yearlyData
+    } yield generateImage(data._1, Tile(x, y, zoom), data._2)
   }
 
 }
