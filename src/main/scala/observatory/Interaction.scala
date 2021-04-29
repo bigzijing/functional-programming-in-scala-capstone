@@ -36,11 +36,11 @@ object Interaction extends InteractionInterface {
 
     val tilePixels = coords
       .map {
-        case (x, y) =>
+        case (y, x) =>
           Tile(
             tile.x * tileWidth + x,
             tile.y * tileHeight + y,
-            8
+            tile.zoom + 8
           ) }
       .map(tileLocation)
       .map(predictTemperature(temperatures, _))
@@ -48,7 +48,7 @@ object Interaction extends InteractionInterface {
       .map(color => Pixel(color.red, color.green, color.blue, 127))
       .toArray
 
-    Image(tileHeight, tileWidth, tilePixels)
+    Image(tileWidth, tileHeight, tilePixels)
   }
 
   /**
