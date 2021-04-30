@@ -61,7 +61,7 @@ object Visualization2 extends Visualization2Interface {
         val latVal = loc.lat.toInt
         val lonVal = loc.lon.toInt
         bilinearInterpolation(
-          CellPoint(loc.lat - latVal, loc.lon - lonVal),
+          CellPoint(loc.lon - lonVal, loc.lat - latVal),
           grid(GridLocation(latVal, lonVal)),
           grid(GridLocation(latVal + 1, lonVal)),
           grid(GridLocation(latVal, lonVal + 1)),
