@@ -23,7 +23,9 @@ object Visualization2 extends Visualization2Interface {
     d10: Temperature,
     d11: Temperature
   ): Temperature = {
-    ???
+    val x = point.x
+    val y = point.y
+    (d00 * (1 - x) * (1 - y)) + (d10 * x * (1 - y)) + (d01 * (1 - x) * y) + (d11 * x * y)
   }
 
   /**
