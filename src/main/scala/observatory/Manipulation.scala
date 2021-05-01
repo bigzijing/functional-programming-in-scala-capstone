@@ -18,7 +18,7 @@ object Manipulation extends ManipulationInterface {
       } yield (lat, lon) -> Visualization.predictTemperature(temperatures, Location(lat, lon))
     }.toMap
 
-    gridLocation => loc2TempMap(gridLocation.lat, gridLocation.lon)
+    gridLocation => loc2TempMap((gridLocation.lat, gridLocation.lon))
   }
 
   /**
